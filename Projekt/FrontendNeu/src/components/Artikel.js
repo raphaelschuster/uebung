@@ -10,7 +10,7 @@ const Artikel = () => {
       <div className="container">
         <div className="article-wrapper">
           <Fade bottom>
-            <h1>Artikel</h1>
+            <h1>Auf Artikel bieten</h1>
           </Fade>
 
           <div className="grid">

@@ -28,16 +28,16 @@ const SearchPage = (props) => {
   useEffect( () => {fetchData()},[]);
 	
   return (
-    <div className="searchpage-wrapper">
     <>
+    <div className="searchpage-wrapper">
       <h1>Artikelliste</h1>
       <SearchBar 
        input={input} 
        onChange={updateInput}
       />
       <CountryList countryList={countryList}/>
-    </>
     </div>
+    </>
    );
 }
 

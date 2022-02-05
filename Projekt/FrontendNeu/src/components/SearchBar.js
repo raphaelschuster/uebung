@@ -3,7 +3,7 @@ import React from 'react';
 const SearchBar = ({keyword,setKeyword}) => {
   const BarStyling = {width:"20rem",background:"#F2F1F9", border:"none", padding:"0.5rem"};
   return (
-    <div className="searchpage-wrapper">
+    <div className="searchbar-wrapper">
     <input 
      style={BarStyling}
      key="random1"
