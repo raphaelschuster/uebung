@@ -4,9 +4,9 @@ import Layout from "../components/layout"
 import Header from "../components/Header"
 import Artikel from "../components/Artikel"
 import About from "../components/about"
-import Promotion from "../components/Promotion"
 import Footer from "../components/Footer"
 import Searchpage from "../components/Searchpage"
+import Anbieten from "../components/Anbieten"
 
 
 const IndexPage = () => (
@@ -14,8 +14,8 @@ const IndexPage = () => (
     <Header></Header>
     <Searchpage></Searchpage>
     <Artikel></Artikel>
+    <Anbieten></Anbieten>
     <About></About>
-    <Promotion></Promotion>
     <Footer></Footer>
   </Layout>
 )
