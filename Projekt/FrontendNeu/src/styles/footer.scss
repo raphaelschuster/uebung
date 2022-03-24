@@ -6,11 +6,12 @@
   flex-direction: column;
   align-items: center;
   h1 {
-    font-size: 3rem;
-    line-height: 20px;
+    font-size: 1.5rem;
+    line-height: 15px;
   }
   h2 {
-    font-size: 1.5rem;
+    margin-top: 10vh;
+    font-size: 0.8rem;
     overflow: hidden;
     @include media(">=phone", "<lgphone") {
       display: none;
@@ -23,7 +24,7 @@
     }
   }
   .email-link {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     color: black;
   }
   .social-icons {
