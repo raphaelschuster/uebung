@@ -10,7 +10,7 @@ const Offer = () => {
       <div className="container">
         <div className="offer-wrapper">
           <Fade bottom>
-            <h1>Artikel anbieten</h1>
+            <h2>Artikel anbieten</h2>
           </Fade>
 
           

@@ -13,6 +13,7 @@ const Footer = () => {
           <a className="email-link" href={`mailto:${data.contactEmail}`}>
             {data.contactEmail}
           </a>
+          <h2>{data.kontaktPara}</h2>
     </div>
     </div>
     </div>
