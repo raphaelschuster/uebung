@@ -1,23 +1,31 @@
 import React from "react"
-import Layout from "../components/layout"
+import Layout from "../components/Layout"
+
 // Components
 import Header from "../components/Header"
-import Artikel from "../components/Artikel"
-import About from "../components/about"
+import Article from "../components/Article"
+import About from "../components/About"
 import Footer from "../components/Footer"
-import Searchpage from "../components/Searchpage"
-import Anbieten from "../components/Anbieten"
+import Offer from "../components/Offer"
+import Searchbar from "../components/Searchbar"
+
+
+
+
 
 
 const IndexPage = () => (
   <Layout>
     <Header></Header>
-    <Searchpage></Searchpage>
-    <Artikel></Artikel>
-    <Anbieten></Anbieten>
+    <Searchbar></Searchbar>
+    <Article></Article>
+    <Offer></Offer>
     <About></About>
     <Footer></Footer>
+    
   </Layout>
 )
+
+
 
 export default IndexPage
