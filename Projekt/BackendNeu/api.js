@@ -1,12 +1,15 @@
 const client = require('./database.js')
 const express = require('express');
 const app = express();
-
+const cors = require("cors");
 //const { v4: uuidv4 } = require('uuid');   // zum einfügen einer einmaligen ID wahrscheinlich unnötig
 
+app.use(cors());
+app.use(express.json());
 
-app.listen(3300, ()=>{
-    console.log("Sever is now listening at port 3300");
+
+app.listen(1001, ()=>{
+    console.log("Sever is now listening at port 1001");
 })
 
 client.connect();
@@ -24,48 +27,32 @@ app.use(logger);
 const bodyParser = require("body-parser");
 const { DEFAULT_ENCODING } = require('crypto');
 app.use(bodyParser.json());
-app.get('/articles', (req, res)=>{
-    client.query(`Select * from articles`, (err, result)=>{
+// app.get('/articles', (req, res)=>{
+//     client.query(`Select * from articles`, (err, result)=>{
        
-        if (err) {
-                    resolveNotFound(res, 'Keine Artikel gefunden' )
-                } else {
-                    res.statusCode = 200;
-                    res.send(result.rows);
-                    res.end();
-                }    
-    });
-    client.end;
-})
-app.get('/article/:id', (req, res)=>{    
-    // const { id } = req.params;
-        //  const article = getArticle(id);
-//   if (res === "[]") {           
-//             resolveNotFound(res, '${id} wurde nicht gefunden' )
-//         } 
-    client.query(`Select * from articles where id=${req.params.id}`, (err, result)=>{
-        
-        // alle gegeben trz gescheitert , paramenter finden sodass leerer DB eintrag erkannt wird
-//result.hasOwnProperty('id')
-        if(err){
-            resolveNotFound(res, 'Keine Artikel mit dieser ID gefunden' )
-        }
-        else {
-            res.statusCode = 200;
-            res.send(result.rows);
-            res.end();
-        }    
-    });
-    client.end;
-})
+//         if (err) {
+//                     resolveNotFound(res, 'Keine Artikel gefunden' )
+//                 } else {
+//                     res.statusCode = 200;
+//                     res.send(result.rows);
+//                     res.end();
+//                 }    
+//     });
+//     client.end;
+// })
+// app.get('/article/:id', (req, res)=>{    
+//     // const { id } = req.params;
+//         //  const article = getArticle(id);
+// //   if (res === "[]") {           
+// //             resolveNotFound(res, '${id} wurde nicht gefunden' )
+// //         } 
 
-// app.get('/article/:name', (req, res)=>{    
-//     client.query(`Select * from articles where name=${req.params.name}`, (err, result)=>{
+//     client.query(`Select * from articles where id=${req.params.id}`, (err, result)=>{
         
 //         // alle gegeben trz gescheitert , paramenter finden sodass leerer DB eintrag erkannt wird
-
+// //result.hasOwnProperty('id')
 //         if(err){
-//             resolveNotFound(res, 'Keine Artikel mit diesem Namen gefunden' )
+//             resolveNotFound(res, 'Keine Artikel mit dieser ID gefunden' )
 //         }
 //         else {
 //             res.statusCode = 200;
@@ -76,28 +63,60 @@ app.get('/article/:id', (req, res)=>{
 //     client.end;
 // })
 
+app.get("/articles", async (req, res) => {    
+    try {
+        
+        const { name } = req.query;
+
+        const articles = await client.query("SELECT * FROM articles WHERE name ILIKE $1", [`%${name}%`]);
+        res.json(articles.rows);
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+    
+    
+    //client.query(`Select * from articles where name=${req.params.name}`, (err, result)=>{
+        
+        // alle gegeben trz gescheitert , paramenter finden sodass leerer DB eintrag erkannt wird
+
+    //     if(err){
+    //         resolveNotFound(res, 'Keine Artikel mit diesem Namen gefunden' )
+    //     }
+    //     else {
+    //         res.statusCode = 200;
+    //         res.send(result.rows);
+    //         res.end();
+    //     }    
+    // });
+    // client.end;
+
+
 app.post('/articles', (req, res)=> {
  
     // if (!req.body.hasOwnProperty('id')) {
     //     resolveBadRequest(res, 'Fehlende "id"-Eigenschaft');            // wenn dieser Fehler auftritt muss die api.js neu gestartet werden
     // }
-    if (!req.body.hasOwnProperty('name')) {
-        resolveBadRequest(res, 'Fehlende "name"-Eigenschaft');
-    }
-    if (!req.body.hasOwnProperty('lagerbestand')) {
-        resolveBadRequest(res, 'Fehlende "lagerbestand"-Eigenschaft');
-    }
+    // if (!req.body.hasOwnProperty('first_name')) {
+    //     resolveBadRequest(res, 'Fehlende "first_name"-Eigenschaft');
+    // }
+    // if (!req.body.hasOwnProperty('last_name')) {
+    //     resolveBadRequest(res, 'Fehlende "last_name"-Eigenschaft');
+    // }
+    // if (!req.body.hasOwnProperty('preis')) {
+    //     resolveBadRequest(res, 'Fehlende "preis"-Eigenschaft');
+    // }
    const article = req.body;
-  // const id = uuidv4();   // zum einfügen einer einmaligen ID wahrscheinlich unnötig
+   //const id = uuidv4();   // zum einfügen einer einmaligen ID wahrscheinlich unnötig
    
 
-    let insertQuery = `insert into articles(name, lagerbestand) 
-                       values('${article.name}', '${article.lagerbestand}')RETURNING id`
+    let insertQuery = `insert into articles(name, beschreibung, startpreis, bild) 
+                       values('${article.name}', '${article.beschreibung}', '${article.startpreis}', '${article.bild}' )RETURNING id`
     client.query(insertQuery, (err, result)=>{
         
         if(err){ //console.log(err.message)
        // res.send('Artikel konnte nicht angelegt werden, bitte überprüfen Sie Ihre Eingabe')
-        resolveBadRequest(res, 'ID ist bereits vergeben' )         
+        resolveBadRequest(res, 'ID ist bereits vergeben' )          
 
      }
     else{
