@@ -14,7 +14,6 @@ const Navbar = () => {
             Yabe
           </div>
           <div className="links-wrapper">
-            <button onClick={() => scrollTo("#login")}>Login</button>
             <button onClick={() => scrollTo("#artikel")}>Kaufen</button>
             <button onClick={() => scrollTo("#anbieten")}>Anbieten</button>
             <button onClick={() => scrollTo("#about")}>Über Uns</button>
