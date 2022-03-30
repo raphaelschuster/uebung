@@ -4,7 +4,7 @@ import Fade from "react-reveal/Fade"
 
 import data from "../yourdata"
 
-const Artikel = () => {
+const Article = () => {
   return (
     <div className="section" id="artikel">
       <div className="container">
@@ -32,4 +32,4 @@ const Artikel = () => {
   )
 }
 
-export default Artikel
+export default Article
