@@ -84,7 +84,7 @@ const onSubmitBid = async e => {
   
   return (
 
-
+ 
     
     <Fragment>
       <div className="container text-center">
@@ -102,25 +102,31 @@ const onSubmitBid = async e => {
         </form>
         <div className="container text-center">
         <h1 className="my-5">Alle Artikel</h1>
+        <div className="anzeigen-wrapper">
           <Grid container spacing="2">
                 {articles.length ? articles.map((article) => (
                     <Grid item xs="14" sm="4" md="3">
           <Card id={article.id} sx={{ maxWidth: 345 }}>
+            {console.log(article)}
                         <CardMedia
                           component="img"
-                          height="140"
-                          image="https://cdn.mdr.de/ratgeber/fahrrad-reisen-104-resimage_v-variantBig16x9_w-1280.jpg?version=26444"
-                          alt="Fahrrad"
+                          height="auto"
+                          image={article.bild ? `${article.bild}`:""}
+                          alt="Bild nicht verfügbar"
+                          max-width="100%"
                         />
                         <CardContent>
                           <Typography gutterBottom variant="h5" component="div">
                             {article.name}
                           </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                          Beschreibung: {article.beschreibung}
+                          <Typography height="100px" variant="body2" color="text.secondary">
+                          Beschreibung: {article.beschreibung} 
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
                           aktueller Preis: {article.startpreis} EUR
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                          Start der Auktion: {article.startdatum} 
                           </Typography>
                         </CardContent>
                         <CardActions>
@@ -170,14 +176,16 @@ const onSubmitBid = async e => {
                         
                       </Card>
                     </Grid>
-                )): <p>Keine Artikel vorhanden</p>}
+                    
+                )): <p></p>}
                 </Grid>
+                </div>
       </div>
         {articles.length === 0 && <p>Keine Artikel gefunden</p>}
       </div>
     </Fragment>
+    
   );
 }
 
 export default App;
-

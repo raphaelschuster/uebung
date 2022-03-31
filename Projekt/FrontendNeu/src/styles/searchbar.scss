@@ -54,3 +54,32 @@
   height: 100%;
 }
 
+.anzeigen-wrapper{
+  margin: 0 auto;
+  @include media(">=phone", "<lgphone") {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  @include media(">=lgphone", "<tablet") {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  @include media(">=tablet", "<desktop") {
+
+    grid-template-columns: 1fr 1fr;
+
+  }
+
+
+width: 90%;
+margin-top: 20px;
+
+
+
+}
+
+
