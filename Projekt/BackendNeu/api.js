@@ -25,46 +25,14 @@ app.use(logger);
 
 
 const bodyParser = require("body-parser");
+
+//Anpassung der Dateigröße die erlaubt ist
 app.use(bodyParser.json({limit: '10mb', extended: true}))
+
 //app.use(bodyParser.urlencoded({limit: '10mb', extended: true}))
 // app.use(bodyParser.json({limit: "50mb"}));
 
-// app.get('/articles', (req, res)=>{
-//     client.query(`Select * from articles`, (err, result)=>{
-       
-//         if (err) {
-//                     resolveNotFound(res, 'Keine Artikel gefunden' )
-//                 } else {
-//                     res.statusCode = 200;
-//                     res.send(result.rows);
-//                     res.end();
-//                 }    
-//     });
-//     client.end;
-// })
-// app.get('/article/:id', (req, res)=>{    
-//     // const { id } = req.params;
-//         //  const article = getArticle(id);
-// //   if (res === "[]") {           
-// //             resolveNotFound(res, '${id} wurde nicht gefunden' )
-// //         } 
-
-//     client.query(`Select * from articles where id=${req.params.id}`, (err, result)=>{
-        
-//         // alle gegeben trz gescheitert , paramenter finden sodass leerer DB eintrag erkannt wird
-// //result.hasOwnProperty('id')
-//         if(err){
-//             resolveNotFound(res, 'Keine Artikel mit dieser ID gefunden' )
-//         }
-//         else {
-//             res.statusCode = 200;
-//             res.send(result.rows);
-//             res.end();
-//         }    
-//     });
-//     client.end;
-// })
-
+//GET-MEthode von laufenden Auctionen mit Suchfunktion
 app.get("/articles", async (req, res) => {    
     try {
         
@@ -77,64 +45,18 @@ app.get("/articles", async (req, res) => {
     }
 });
     
-//     app.get("/articles/images/:id"), (req, res) =>{
-// const { id } = req.params;
-     
 
-//     client.query(`Select * from articles where id=${req.params.id}`, (err, result)=>{
-        
-//         if(err){
-//             resolveNotFound(res, 'Keine Artikel mit dieser ID gefunden' )
-//         }
-//         else {
-//             res.statusCode = 200;
-//             res.send(result.rows);
-//             res.end();
-//         }    
-//     });
-//     client.end;
-//  }
-    //client.query(`Select * from articles where name=${req.params.name}`, (err, result)=>{
-        
-        // alle gegeben trz gescheitert , paramenter finden sodass leerer DB eintrag erkannt wird
-
-    //     if(err){
-    //         resolveNotFound(res, 'Keine Artikel mit diesem Namen gefunden' )
-    //     }
-    //     else {
-    //         res.statusCode = 200;
-    //         res.send(result.rows);
-    //         res.end();
-    //     }    
-    // });
-    // client.end;
-
-
+//Artikel hinzufügen
 app.post('/articles', (req, res)=> {
  
-    // if (!req.body.hasOwnProperty('id')) {
-    //     resolveBadRequest(res, 'Fehlende "id"-Eigenschaft');            // wenn dieser Fehler auftritt muss die api.js neu gestartet werden
-    // }
-    // if (!req.body.hasOwnProperty('first_name')) {
-    //     resolveBadRequest(res, 'Fehlende "first_name"-Eigenschaft');
-    // }
-    // if (!req.body.hasOwnProperty('last_name')) {
-    //     resolveBadRequest(res, 'Fehlende "last_name"-Eigenschaft');
-    // }
-    // if (!req.body.hasOwnProperty('preis')) {
-    //     resolveBadRequest(res, 'Fehlende "preis"-Eigenschaft');
-    // }
    const article = req.body;
-   //const id = uuidv4();   // zum einfügen einer einmaligen ID wahrscheinlich unnötig
-   
     console.log(req.body);
     let insertQuery = `insert into articles(name, beschreibung, startpreis, bild, startdatum) 
                        values('${article.name}', '${article.beschreibung}', '${article.startpreis}', '${article.bild[0].base64}', '${article.startdatum}')RETURNING id`
     client.query(insertQuery, (err, result)=>{
         
-        if(err){ //console.log(err.message)
-       // res.send('Artikel konnte nicht angelegt werden, bitte überprüfen Sie Ihre Eingabe')
-        resolveBadRequest(res, 'ID ist bereits vergeben' )          
+        if(err){ 
+        resolveBadRequest(res, 'Etwas ist schiefgelaufen' )          
 
      }
     else{
@@ -143,14 +65,15 @@ app.post('/articles', (req, res)=> {
     })
     client.end;
 });
+
+//Preis des Artikel updaten
+
 app.put('/articles/:id', (req, res)=> {
     let article = req.body;
     console.log(req.body);
     let updateQuery = `update articles
-
-    set startpreis = '${article.startpreis}'
-
-    where id = ${article.id} AND  startpreis < '${article.startpreis}' `
+                set startpreis = '${article.startpreis}'
+                where id = ${article.id} AND  startpreis < '${article.startpreis}' `
                        
     client.query(updateQuery, (err, result)=>{
         if(!err){
@@ -161,6 +84,8 @@ app.put('/articles/:id', (req, res)=> {
     client.end;
 })
 
+
+//Administrativer Delete 
 app.delete('/articles/:id', (req, res)=> {
     let insertQuery = `delete from articles where id=${req.params.id}`
 
@@ -172,6 +97,8 @@ app.delete('/articles/:id', (req, res)=> {
     })
     client.end;
 })
+
+
 function resolveNotFound(res, message) {        //Funktion die bei Fehler 404 ausgegeben wird
     res.statusCode = 404;
     res.send(message);
@@ -184,6 +111,3 @@ function resolveBadRequest(res, message) {       //Funktion die bei Fehler 400 a
     res.end();
     return;
 }
-// function getArticle(id) {                       //Funktion holt artikel ID
-//     return articles.find((article) => article.id === id);
-// }
