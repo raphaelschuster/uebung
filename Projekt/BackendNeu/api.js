@@ -2,10 +2,10 @@ const client = require('./database.js')
 const express = require('express');
 const app = express();
 const cors = require("cors");
-//const { v4: uuidv4 } = require('uuid');   // zum einfügen einer einmaligen ID wahrscheinlich unnötig
+
 
 app.use(cors());
-app.use(express.json());
+//app.use(express.json());
 
 
 app.listen(1001, ()=>{
@@ -25,8 +25,9 @@ app.use(logger);
 
 
 const bodyParser = require("body-parser");
-const { DEFAULT_ENCODING } = require('crypto');
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '10mb', extended: true}))
+//app.use(bodyParser.urlencoded({limit: '10mb', extended: true}))
+// app.use(bodyParser.json({limit: "50mb"}));
 
 // app.get('/articles', (req, res)=>{
 //     client.query(`Select * from articles`, (err, result)=>{
@@ -69,14 +70,30 @@ app.get("/articles", async (req, res) => {
         
         const { name } = req.query;
 
-        const articles = await client.query("SELECT * FROM articles WHERE name ILIKE $1", [`%${name}%`]);
+        const articles = await client.query("SELECT * FROM articles WHERE name ILIKE $1 AND startdatum > NOW()- INTERVAL '15 MINUTE'", [`%${name}%`]);
         res.json(articles.rows);
     } catch (err) {
         console.error(err.message);
     }
 });
     
-    
+//     app.get("/articles/images/:id"), (req, res) =>{
+// const { id } = req.params;
+     
+
+//     client.query(`Select * from articles where id=${req.params.id}`, (err, result)=>{
+        
+//         if(err){
+//             resolveNotFound(res, 'Keine Artikel mit dieser ID gefunden' )
+//         }
+//         else {
+//             res.statusCode = 200;
+//             res.send(result.rows);
+//             res.end();
+//         }    
+//     });
+//     client.end;
+//  }
     //client.query(`Select * from articles where name=${req.params.name}`, (err, result)=>{
         
         // alle gegeben trz gescheitert , paramenter finden sodass leerer DB eintrag erkannt wird
@@ -110,9 +127,9 @@ app.post('/articles', (req, res)=> {
    const article = req.body;
    //const id = uuidv4();   // zum einfügen einer einmaligen ID wahrscheinlich unnötig
    
-
-    let insertQuery = `insert into articles(name, beschreibung, startpreis, bild) 
-                       values('${article.name}', '${article.beschreibung}', '${article.startpreis}', '${article.bild}' )RETURNING id`
+    console.log(req.body);
+    let insertQuery = `insert into articles(name, beschreibung, startpreis, bild, startdatum) 
+                       values('${article.name}', '${article.beschreibung}', '${article.startpreis}', '${article.bild[0].base64}', '${article.startdatum}')RETURNING id`
     client.query(insertQuery, (err, result)=>{
         
         if(err){ //console.log(err.message)
@@ -130,9 +147,11 @@ app.put('/articles/:id', (req, res)=> {
     let article = req.body;
     console.log(req.body);
     let updateQuery = `update articles
-                       set startpreis = '${article.startpreis}'
-                       where id = ${article.id}`
 
+    set startpreis = '${article.startpreis}'
+
+    where id = ${article.id} AND  startpreis < '${article.startpreis}' `
+                       
     client.query(updateQuery, (err, result)=>{
         if(!err){
             res.send('Update war erfolgreich')
