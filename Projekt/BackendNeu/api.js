@@ -27,6 +27,7 @@ app.use(logger);
 const bodyParser = require("body-parser");
 const { DEFAULT_ENCODING } = require('crypto');
 app.use(bodyParser.json());
+
 // app.get('/articles', (req, res)=>{
 //     client.query(`Select * from articles`, (err, result)=>{
        
@@ -127,9 +128,9 @@ app.post('/articles', (req, res)=> {
 });
 app.put('/articles/:id', (req, res)=> {
     let article = req.body;
+    console.log(req.body);
     let updateQuery = `update articles
-                       set name = '${article.name}',
-                       lagerbestand = '${article.lagerbestand}'
+                       set startpreis = '${article.startpreis}'
                        where id = ${article.id}`
 
     client.query(updateQuery, (err, result)=>{
@@ -140,6 +141,7 @@ app.put('/articles/:id', (req, res)=> {
     })
     client.end;
 })
+
 app.delete('/articles/:id', (req, res)=> {
     let insertQuery = `delete from articles where id=${req.params.id}`
 
