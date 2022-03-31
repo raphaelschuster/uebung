@@ -2,10 +2,10 @@
 import Fade from "react-reveal/Fade"
 import React, {useState } from "react";
 import ReactDOM from 'react-dom';
- 
 import FileBase64 from 'react-file-base64';
 
 
+//Funktion zum anlegen von Artikeln
 
 const Offer = () => {
   const [name, setName] = useState("");
@@ -14,10 +14,15 @@ const Offer = () => {
   const [image, setImage] = useState("");
   const [startdatum, setStartdatum] = useState("")
   
+  //beim "Buttonbestätigen" die Daten ans Backend übermitteln
+
   const onSubmitForm = async e => {
     e.preventDefault();
     try {
       console.log(e);
+
+      //Body der übermittleren Daten
+      
       const body = {
         name:name,
         beschreibung:beschreibung,
@@ -42,7 +47,8 @@ const Offer = () => {
           <Fade bottom>
             <h2>Artikel anbieten</h2>
           </Fade>
-
+        
+        {/* Felder zur Anlage der Artikel */}
           
           <form onSubmit={onSubmitForm}>
           <input
@@ -82,6 +88,9 @@ const Offer = () => {
             onChange={e => setStartdatum(e.target.value)}
             required
           />
+
+           {/* Hochladen von Bildern  */}
+
           <FileBase64 multiple="false" type="image" onDone={(base64)=> setImage(base64)}/>
 
           
